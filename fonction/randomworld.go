@@ -1,4 +1,4 @@
-package projethangman
+package fonction
 
 import (
 	"bufio"
@@ -8,7 +8,8 @@ import (
 )
 
 func RandomWords(nomFichier string) (string, error) {
-	fichier, err := os.Open(nomFichier)
+	path := "./data/" + nomFichier
+	fichier, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}

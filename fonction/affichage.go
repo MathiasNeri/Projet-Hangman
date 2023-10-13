@@ -1,4 +1,4 @@
-package projethangman
+package fonction
 
 import (
 	"os"

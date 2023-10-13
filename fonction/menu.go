@@ -1,4 +1,4 @@
-package projethangman
+package fonction
 
 import (
 	"fmt"
@@ -55,6 +55,7 @@ func Menu() {
 				return
 			}
 			fmt.Printf("Le mot à trouver est : %s\n", mot)
+			RandomLetters(mot)
 
 		case 2:
 			ClearConsole()
@@ -69,6 +70,7 @@ func Menu() {
 				return
 			}
 			fmt.Printf("Le mot est : %s\n", mot)
+			RandomLetters(mot)
 
 		case 3:
 			ClearConsole()
@@ -83,6 +85,7 @@ func Menu() {
 				return
 			}
 			fmt.Printf("Le mot est : %s\n", mot)
+			RandomLetters(mot)
 
 		default:
 			fmt.Println("Choix invalide. Veuillez sélectionner une autre option.")
