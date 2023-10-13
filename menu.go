@@ -54,7 +54,7 @@ func Menu() {
 				fmt.Println("Erreur lors ded la lecture du fichier :", err)
 				return
 			}
-			fmt.Printf("Le mot est : %s\n", mot)
+			fmt.Printf("Le mot à trouver est : %s\n", mot)
 
 		case 2:
 			ClearConsole()
