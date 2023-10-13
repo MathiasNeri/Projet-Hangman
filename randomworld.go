@@ -1,4 +1,4 @@
-package main
+package projethangman
 
 import (
 	"bufio"
@@ -25,8 +25,4 @@ func RandomWords(nomFichier string) (string, error) {
 	rng := rand.New(source)
 	indexAleatoire := rng.Intn(len(mots))
 	return mots[indexAleatoire], nil
-}
-
-func main() {
-	Menu()
 }
