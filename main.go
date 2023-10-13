@@ -2,13 +2,12 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"math/rand"
 	"os"
 	"time"
 )
 
-func choisirMotAleatoire(nomFichier string) (string, error) {
+func RandomWords(nomFichier string) (string, error) {
 	fichier, err := os.Open(nomFichier)
 	if err != nil {
 		return "", err
@@ -29,11 +28,5 @@ func choisirMotAleatoire(nomFichier string) (string, error) {
 }
 
 func main() {
-	nomFichier := "easy.txt"
-	mot, err := choisirMotAleatoire(nomFichier)
-	if err != nil {
-		fmt.Println("Erreur lors de la lecture du fichier :", err)
-		return
-	}
-	fmt.Printf("Le mot est : %s\n", mot)
+	Menu()
 }
