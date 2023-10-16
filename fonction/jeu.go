@@ -48,54 +48,63 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		images = append([]string{image}, images...) // Ajoutez la dernière image en haut de la pile
 	}
 
-	for essaisRestants > 0 && lettresRestantes > 0 {
+	lettreDevinee := false
+	motDevine := false
+
+	for essaisRestants > 0 && lettresRestantes > 0 && !(lettreDevinee && motDevine) {
 		fmt.Printf("Mot caché: %s\n", motCache)
 		fmt.Printf("Tentatives restantes: %d\n", essaisRestants)
 
+		// Afficher les images avant la décrémentation de essaisRestants
 		if essaisRestants >= 0 && essaisRestants < len(images) {
 			fmt.Println(images[essaisRestants])
 		} else {
 			fmt.Println("Nombre d'essais non pris en charge.")
 		}
 
-		var lettre rune
-		fmt.Print("Devinez une lettre: ")
-		fmt.Scanf("%c\n", &lettre) // Ajoutez "\n" pour consommer le caractère de retour à la ligne
-		lettre = unicode.ToLower(lettre)
+		var entree string
+		fmt.Print("Devinez une lettre ou un mot: ")
+		fmt.Scanf("%s", &entree)
 
-		if !unicode.IsLetter(lettre) {
-			fmt.Println("Veuillez entrer une lettre alphabétique.")
-			continue
-		}
-
-		if lettresDejaEssayees[lettre] {
-			fmt.Println("Vous avez déjà essayé cette lettre.")
-			continue
-		}
-
-		lettresDejaEssayees[lettre] = true
-
-		if strings.ContainsRune(motSecret, lettre) {
-			fmt.Println("Bonne devinette!")
-			for i, char := range motSecret {
-				if char == lettre {
-					motCache = motCache[:i] + string(char) + motCache[i+1:]
-					lettresRestantes--
-				}
+		if len(entree) == 1 {
+			lettre := unicode.ToLower([]rune(entree)[0])
+			if !unicode.IsLetter(lettre) {
+				fmt.Println("Veuillez entrer une lettre alphabétique.")
+				continue
 			}
+
+			if lettresDejaEssayees[lettre] {
+				fmt.Println("Vous avez déjà essayé cette lettre.")
+				continue
+			}
+
+			lettresDejaEssayees[lettre] = true
+
+			if strings.ContainsRune(motSecret, lettre) {
+				fmt.Println("Bonne devinette!")
+				for i, char := range motSecret {
+					if char == lettre {
+						motCache = motCache[:i] + string(char) + motCache[i+1:]
+						lettresRestantes--
+					}
+				}
+				lettreDevinee = true
+			} else {
+				fmt.Println("Mauvaise devinette!")
+				essaisRestants -= 1 // Retirer 1 essai
+			}
+		} else if len(entree) == len(motSecret) && entree == motSecret {
+			lettresRestantes = 0 // Le joueur a correctement deviné le mot
+			motDevine = true
 		} else {
 			fmt.Println("Mauvaise devinette!")
-			essaisRestants--
+			if len(entree) > 1 {
+				essaisRestants -= 2 // Retirer 2 essais seulement si la tentative est un mot complet
+			}
 		}
 	}
 
-	if essaisRestants >= 0 && essaisRestants < len(images) {
-		fmt.Println(images[essaisRestants])
-	} else {
-		fmt.Println("Nombre d'essais non pris en charge.")
-	}
-
-	if lettresRestantes == 0 {
+	if lettreDevinee && motDevine {
 		fmt.Println("Félicitations, vous avez gagné! Le mot était :", motSecret)
 	} else {
 		fmt.Println("Désolé, vous avez perdu. Le mot était :", motSecret)
