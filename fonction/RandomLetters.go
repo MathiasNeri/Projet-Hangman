@@ -2,11 +2,10 @@ package fonction
 
 import (
 	"crypto/rand"
-	"fmt"
 	"math/big"
 )
 
-func RandomLetters(maChaine string) {
+func RandomLetters(maChaine string) string {
 	// Créer une nouvelle chaîne de caractères avec des tirets pour cacher les lettres
 	chaineCachee := ""
 	for j := 0; j < len(maChaine); j++ {
@@ -26,5 +25,5 @@ func RandomLetters(maChaine string) {
 	chaineCachee = chaineCachee[:i2] + string(maChaine[i2]) + chaineCachee[i2+1:]
 
 	// Afficher la chaîne cachée avec les lettres aléatoires
-	fmt.Println(chaineCachee)
+	return chaineCachee
 }

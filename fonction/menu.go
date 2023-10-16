@@ -54,8 +54,8 @@ func Menu() {
 				fmt.Println("Erreur lors ded la lecture du fichier :", err)
 				return
 			}
-			fmt.Printf("Le mot à trouver est : %s\n", mot)
 			RandomLetters(mot)
+			JouerAuPendu(nomFichier, mot)
 
 		case 2:
 			ClearConsole()
