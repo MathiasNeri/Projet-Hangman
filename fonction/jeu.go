@@ -56,7 +56,7 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		fmt.Printf("Tentatives restantes: %d\n", essaisRestants)
 
 		// Afficher les images avant la décrémentation de essaisRestants
-		if essaisRestants >= 0 && essaisRestants < len(images) {
+		if essaisRestants > 0 && essaisRestants < len(images) {
 			fmt.Println(images[essaisRestants])
 		} else {
 			fmt.Println("Nombre d'essais non pris en charge.")
