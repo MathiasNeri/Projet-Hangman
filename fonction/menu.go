@@ -69,8 +69,9 @@ func Menu() {
 				fmt.Println("Erreur lors ded la lecture du fichier :", err)
 				return
 			}
-			fmt.Printf("Le mot est : %s\n", mot)
+
 			RandomLetters(mot)
+			JouerAuPendu(nomFichier, mot)
 
 		case 3:
 			ClearConsole()
@@ -84,8 +85,8 @@ func Menu() {
 				fmt.Println("Erreur lors ded la lecture du fichier :", err)
 				return
 			}
-			fmt.Printf("Le mot est : %s\n", mot)
 			RandomLetters(mot)
+			JouerAuPendu(nomFichier, mot)
 
 		default:
 			fmt.Println("Choix invalide. Veuillez sélectionner une autre option.")
@@ -97,6 +98,5 @@ func Menu() {
 	default:
 		fmt.Println("Choix invalide. Veuillez sélectionner une autre option.")
 		Menu()
-		break
 	}
 }

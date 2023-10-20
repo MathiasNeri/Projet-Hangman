@@ -27,9 +27,6 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		return
 	}
 	defer fichierImages.Close()
-	if err != nil {
-		fmt.Println("Erreur lors de la fermeture du fichier d'images:", err)
-	}
 
 	scannerImages := bufio.NewScanner(fichierImages)
 	var image string
@@ -52,19 +49,10 @@ func JouerAuPendu(nomFichier, motSecret string) {
 	motDevine := false
 
 	for essaisRestants > 0 && lettresRestantes > 0 && !(lettreDevinee && motDevine) {
-		fmt.Printf("Mot caché: %s\n", motCache)
-		fmt.Printf("Tentatives restantes: %d\n", essaisRestants)
-
-		// Afficher les images avant la décrémentation de essaisRestants
-		if essaisRestants > 0 && essaisRestants < len(images) {
-			fmt.Println(images[essaisRestants])
-		} else {
-			fmt.Println("Nombre d'essais non pris en charge.")
-		}
 
 		var entree string
 		fmt.Print("Devinez une lettre ou un mot: ")
-		fmt.Scanf("%s", &entree)
+		fmt.Scan(&entree)
 
 		if len(entree) == 1 {
 			lettre := unicode.ToLower([]rune(entree)[0])
@@ -75,11 +63,13 @@ func JouerAuPendu(nomFichier, motSecret string) {
 
 			if lettresDejaEssayees[lettre] {
 				fmt.Println("Vous avez déjà essayé cette lettre.")
+				entree = ""
 				continue
 			}
 
 			lettresDejaEssayees[lettre] = true
 
+			lettreDevinee = false // Réinitialiser la variable lettreDevinee
 			if strings.ContainsRune(motSecret, lettre) {
 				fmt.Println("Bonne devinette!")
 				for i, char := range motSecret {
@@ -88,7 +78,7 @@ func JouerAuPendu(nomFichier, motSecret string) {
 						lettresRestantes--
 					}
 				}
-				lettreDevinee = true
+				lettreDevinee = true // Marquer la lettre comme correctement devinée
 			} else {
 				fmt.Println("Mauvaise devinette!")
 				essaisRestants -= 1 // Retirer 1 essai
@@ -96,11 +86,19 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		} else if len(entree) == len(motSecret) && entree == motSecret {
 			lettresRestantes = 0 // Le joueur a correctement deviné le mot
 			motDevine = true
-		} else {
+		} else if len(entree) == len(motSecret) && entree != motSecret {
 			fmt.Println("Mauvaise devinette!")
 			if len(entree) > 1 {
 				essaisRestants -= 2 // Retirer 2 essais seulement si la tentative est un mot complet
 			}
+		}
+		fmt.Printf("Mot caché: %s\n", motCache)
+		fmt.Printf("Tentatives restantes: %d\n", essaisRestants)
+		// Afficher les images avant la décrémentation de essaisRestants
+		if essaisRestants >= 0 && essaisRestants < len(images) {
+			fmt.Println(images[essaisRestants])
+		} else {
+			fmt.Println("Nombre d'essais non pris en charge.")
 		}
 	}
 
