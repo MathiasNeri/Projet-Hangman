@@ -3,9 +3,10 @@ package fonction
 import (
 	"crypto/rand"
 	"math/big"
+	"strings"
 )
 
-func RandomLetters(maChaine string) string {
+func RandomLetters(maChaine string) (string, [2]int) {
 	// Créer une nouvelle chaîne de caractères avec des tirets pour cacher les lettres
 	chaineCachee := ""
 	for j := 0; j < len(maChaine); j++ {
@@ -13,17 +14,34 @@ func RandomLetters(maChaine string) string {
 	}
 
 	// Générer deux indices aléatoires pour extraire deux lettres aléatoires de la chaîne
-	indice1, _ := rand.Int(rand.Reader, big.NewInt(int64(len(maChaine))))
-	indice2, _ := rand.Int(rand.Reader, big.NewInt(int64(len(maChaine))))
+	indices := make([]int, 0)
 
-	// Obtenir les indices en utilisant Int64
-	i1 := indice1.Int64()
-	i2 := indice2.Int64()
+	for len(indices) < 2 {
+		indice, _ := rand.Int(rand.Reader, big.NewInt(int64(len(maChaine))))
+		i := int(indice.Int64())
+		// Vérifier si l'indice n'a pas déjà été choisi et si la lettre correspondante ne se répète pas dans le mot
+		if !contains(indices, i) && strings.Count(maChaine, string(maChaine[i])) < 2 {
+			indices = append(indices, i)
+		}
+	}
 
 	// Remplacer les tirets par les lettres aléatoires aux indices correspondants
-	chaineCachee = chaineCachee[:i1] + string(maChaine[i1]) + chaineCachee[i1+1:]
-	chaineCachee = chaineCachee[:i2] + string(maChaine[i2]) + chaineCachee[i2+1:]
+	for _, i := range indices {
+		chaineCachee = chaineCachee[:i] + string(maChaine[i]) + chaineCachee[i+1:]
+	}
 
-	// Afficher la chaîne cachée avec les lettres aléatoires
-	return chaineCachee
+	// Stocker les indices dans un tableau
+	indexLettres := [2]int{indices[0], indices[1]}
+
+	// Retourner la chaîne cachée avec les lettres aléatoires et les indices
+	return chaineCachee, indexLettres
+}
+
+func contains(arr []int, elem int) bool {
+	for _, e := range arr {
+		if e == elem {
+			return true
+		}
+	}
+	return false
 }

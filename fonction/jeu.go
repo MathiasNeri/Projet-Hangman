@@ -10,10 +10,16 @@ import (
 
 func JouerAuPendu(nomFichier, motSecret string) {
 	essaisRestants := 10
-	lettresRestantes := len(motSecret)
+	lettresRestantes := len(motSecret) - 2
 	lettresDejaEssayees := make(map[rune]bool)
+	lettresDejaTrouvees := make(map[rune]bool)
 
-	motCache := RandomLetters(motSecret)
+	// Appeler RandomLetters pour obtenir la chaîne cachée et les indices
+	motCache, indicesLettres := RandomLetters(motSecret)
+
+	// Ajouter les deux lettres correspondant aux indices dans lettresDejaEssayees
+	lettresDejaEssayees[rune(motSecret[indicesLettres[0]])] = true
+	lettresDejaEssayees[rune(motSecret[indicesLettres[1]])] = true
 
 	fmt.Println("Bienvenue au jeu du pendu!")
 
@@ -48,8 +54,10 @@ func JouerAuPendu(nomFichier, motSecret string) {
 	lettreDevinee := false
 	motDevine := false
 
-	for essaisRestants > 0 && lettresRestantes > 0 && !(lettreDevinee && motDevine) {
+	// Afficher le mot caché avant le premier tour
+	fmt.Printf("Mot caché: %s\n", motCache)
 
+	for essaisRestants > 0 && lettresRestantes > 0 && !(lettreDevinee && motDevine) {
 		var entree string
 		fmt.Print("Devinez une lettre ou un mot: ")
 		fmt.Scan(&entree)
@@ -79,6 +87,16 @@ func JouerAuPendu(nomFichier, motSecret string) {
 					}
 				}
 				lettreDevinee = true // Marquer la lettre comme correctement devinée
+
+				if lettresDejaTrouvees[lettre] {
+					// Si la lettre est déjà trouvée ailleurs, révèle-la à toutes les positions
+					for i, char := range motSecret {
+						if char == lettre {
+							motCache = motCache[:i] + string(char) + motCache[i+1:]
+							lettresRestantes--
+						}
+					}
+				}
 			} else {
 				fmt.Println("Mauvaise devinette!")
 				essaisRestants -= 1 // Retirer 1 essai
@@ -86,7 +104,7 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		} else if len(entree) == len(motSecret) && entree == motSecret {
 			lettresRestantes = 0 // Le joueur a correctement deviné le mot
 			motDevine = true
-		} else if len(entree) == len(motSecret) && entree != motSecret {
+		} else {
 			fmt.Println("Mauvaise devinette!")
 			if len(entree) > 1 {
 				essaisRestants -= 2 // Retirer 2 essais seulement si la tentative est un mot complet
@@ -102,7 +120,7 @@ func JouerAuPendu(nomFichier, motSecret string) {
 		}
 	}
 
-	if lettreDevinee && motDevine {
+	if lettresRestantes == 0 || motDevine {
 		fmt.Println("Félicitations, vous avez gagné! Le mot était :", motSecret)
 	} else {
 		fmt.Println("Désolé, vous avez perdu. Le mot était :", motSecret)
